@@ -20,4 +20,21 @@ try{
   
 })
 
+router.get("/:userId", async (req, res) => {
+  const {userId} = req.params;
+
+  try {
+    const messages = await prisma.message.findMany({
+      where: {
+        OR: [{senderId: userId}, {receiverId: userId}],
+      },
+      orderBy: {createdAt: "desc"},
+  
+    })
+    res.json(messages);
+  } catch (error){
+    res.status(500).json({error: "Error getting messages"})
+  }
+})
+
 module.exports = router;
