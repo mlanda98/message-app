@@ -1,14 +1,26 @@
 const express = require("express");
-const authenticate = require("../authenticate");
 const prisma = require("../prismaClient");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 
-router.post("/send", authenticate, async (req, res) => {
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(403).json({ error: "Invalid token" });
+  }
+};
+
+router.post("/send", verifyToken, async (req, res) => {
   const { receiverId, content } = req.body;
 
   const senderId = req.user.userId;
 
-  if (!senderId || !receiverId || !content) {
+  if (!receiverId || !content) {
     return res.status(400).json({ error: "All fields are required" });
   }
   try {
@@ -25,8 +37,8 @@ router.post("/send", authenticate, async (req, res) => {
   }
 });
 
-router.get("/:userId", async (req, res) => {
-  const { userId } = req.params;
+router.get("/", verifyToken,  async (req, res) => {
+  const userId = req.user.userId;
 
   try {
     const messages = await prisma.message.findMany({

@@ -1,10 +1,22 @@
 const express = require("express");
-const authenticate = require("../authenticate");
+const jwt = require("jsonwebtoken");
 const prisma = require("../prismaClient");
 const { use } = require("./authRoutes");
 const router = express.Router();
 
-router.put("/:userId", authenticate, async (req, res) => {
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(403).json({ error: "Invalid token" });
+  }
+};
+
+router.put("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   const { bio } = req.body;
 
@@ -22,10 +34,10 @@ router.put("/:userId", authenticate, async (req, res) => {
   }
 });
 
-router.get("/:userId", authenticate, async (req, res) => {
+router.get("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   try {
-    const profile = prisma.profile.findUnique({ where: { userId } });
+    const profile = await prisma.profile.findUnique({ where: { userId } });
 
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
