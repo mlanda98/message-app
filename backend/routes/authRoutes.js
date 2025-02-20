@@ -1,4 +1,5 @@
 const express = require("express");
+const authenticate = require("../authenticate")
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const prisma = require("../prismaClient");

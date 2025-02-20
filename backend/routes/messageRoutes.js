@@ -1,9 +1,12 @@
 const express = require("express");
+const authenticate = require("../authenticate");
 const prisma = require("../prismaClient");
 const router = express.Router();
 
-router.post("/send", async (req, res) => {
-  const { senderId, receiverId, content } = req.body;
+router.post("/send", authenticate, async (req, res) => {
+  const { receiverId, content } = req.body;
+
+  const senderId = req.user.userId;
 
   if (!senderId || !receiverId || !content) {
     return res.status(400).json({ error: "All fields are required" });
@@ -15,7 +18,10 @@ router.post("/send", async (req, res) => {
 
     res.status(201).json({ message: "Message sent", data: message });
   } catch (error) {
-    res.status(500).json({ error: "Error sending message" });
+    console.error("Error sending message:", error);
+    res
+      .status(500)
+      .json({ error: "Error sending message", details: error.message });
   }
 });
 

@@ -28,7 +28,6 @@ model Profile {
   userId String @unique
   user User @relation(fields: [userId], references: [id])
   bio String?
-  avatar String?
 }
 
 model Message {
