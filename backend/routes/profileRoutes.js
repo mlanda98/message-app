@@ -6,13 +6,13 @@ const router = express.Router();
 
 router.put("/:userId", authenticate, async (req, res) => {
   const { userId } = req.params;
-  const { bio} = req.body;
+  const { bio } = req.body;
 
   try {
     const profile = await prisma.profile.upsert({
       where: { userId },
-      update: { bio},
-      create: { userId, bio},
+      update: { bio },
+      create: { userId, bio },
     });
     res.json(profile);
   } catch (error) {
