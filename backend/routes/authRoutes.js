@@ -13,7 +13,7 @@ router.post("/register", async (req, res) => {
     const user = await prisma.user.create({
       data: { username, email, password: hashedPassword },
     });
-    res.json({ message: "User registered successfully" });
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(400).json({ error: "User already exists" });
   }
