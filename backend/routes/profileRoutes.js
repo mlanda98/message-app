@@ -1,7 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const prisma = require("../prismaClient");
-const { use } = require("./authRoutes");
 const router = express.Router();
 
 const verifyToken = (req, res, next) => {
@@ -36,8 +35,13 @@ router.put("/:userId", verifyToken, async (req, res) => {
 
 router.get("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
+  console.log("Fetching profile for userId:", userId);
   try {
-    const profile = await prisma.profile.findUnique({ where: { userId } });
+    const profile = await prisma.profile.findUnique({ where: { userId },
+    select:{
+      username: true,
+      bio: true,
+    }});
 
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });

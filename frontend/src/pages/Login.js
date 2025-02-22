@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRevalidator } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,11 +18,12 @@ const Login = () => {
     });
 
     const data = await response.json();
+   
 
     if (response.ok) {
       alert("Login successful");
       localStorage.setItem("token", data.token);
-      window.location.href = "/profile";
+      window.location.href = "/dashboard";
     } else {
       setError(data.error || "Login failed");
     }

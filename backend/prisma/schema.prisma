@@ -18,7 +18,7 @@ model User {
   username String @unique
   email String @unique
   password String
-  profile Profile?
+  profile Profile? @relation()
   messagesSent Message[] @relation("SentMessages")
   messagesReceived Message[] @relation("ReceivedMessages")
 }
@@ -27,6 +27,7 @@ model Profile {
   id String @id @default(uuid())
   userId String @unique
   user User @relation(fields: [userId], references: [id])
+  username String?
   bio String?
 }
 
