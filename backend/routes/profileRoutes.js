@@ -17,13 +17,16 @@ const verifyToken = (req, res, next) => {
 
 router.put("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
-  const { bio } = req.body;
+  const { username, bio } = req.body;
 
   try {
     const profile = await prisma.profile.upsert({
       where: { userId },
-      update: { bio },
-      create: { userId, bio },
+      update: {
+        username: username || undefined,
+        bio: bio || undefined,
+      },
+      create: { userId, username, bio },
     });
     res.json(profile);
   } catch (error) {
@@ -37,11 +40,13 @@ router.get("/:userId", verifyToken, async (req, res) => {
   const { userId } = req.params;
   console.log("Fetching profile for userId:", userId);
   try {
-    const profile = await prisma.profile.findUnique({ where: { userId },
-    select:{
-      username: true,
-      bio: true,
-    }});
+    const profile = await prisma.profile.findUnique({
+      where: { userId },
+      select: {
+        username: true,
+        bio: true,
+      },
+    });
 
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
