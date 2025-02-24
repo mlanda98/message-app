@@ -11,9 +11,6 @@ const Chat = () => {
 
   const token = localStorage.getItem("token");
   const decodedToken = jwtDecode(token);
-  if (!token) {
-    console.error("No token found cant fetch messages")
-  }
   const userId = decodedToken.userId;
 
   useEffect(() => {
@@ -21,15 +18,12 @@ const Chat = () => {
       const response = await fetch("http://localhost:3001/api/auth/users", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!response.ok){
-        throw new Error(`Error: ${response.status} ${response.statusText}`)
-      }
+      
       const data = await response.json();
       if (!Array.isArray(data)){
         throw new Error("Unexpected response format")
       }
-
-      console.log("Messages fetched:", data)
+      
       setUsers(data.filter(user => user.id !== userId));
     };
 
