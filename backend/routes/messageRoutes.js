@@ -45,7 +45,7 @@ router.get("/", verifyToken,  async (req, res) => {
       where: {
         OR: [{ senderId: userId }, { receiverId: userId }],
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: "asc" },
     });
     res.json(messages);
   } catch (error) {
