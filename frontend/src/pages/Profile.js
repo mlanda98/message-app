@@ -60,7 +60,7 @@ const Profile = () => {
         console.error("Error updating profile:", data.error);
       }
     } catch (error){
-      console.error("Error updating profile:", error);
+      console.error("Error updating profile:", error)
     }
   }
 
