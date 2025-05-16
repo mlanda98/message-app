@@ -4,12 +4,6 @@ A simple full-stack messaging application that allows users to sign up, customiz
 
 ---
 
-🚀 Demo
-
- ![App Demo](dem.gif)
-
----
-
 📌 Features
 - user authentication (signup, login, logout)
 - send and receive messages
@@ -27,21 +21,29 @@ A simple full-stack messaging application that allows users to sign up, customiz
 - Authentication: JWT
 
 
+
 ---
 
 💻 Run It Locally
 - Clone the repository
   `git clone https://github.com/mlanda98/message-app.git`
-  Backend
-- cd backend
-- npm install
-- npx prisma migrate dev
-- npm run dev
+- Backend:
 
-  Frontend
-- cd frontend
-- npm install
-- npm start
+```
+  cd backend
+  npm install
+  npx prisma migrate dev
+  npm run dev
+
+```
+- Frontend:
+
+```
+  cd frontend
+  npm install
+  npm start
+  
+```
 - Open your browser to `http://localhost:3000`
 
 ---
